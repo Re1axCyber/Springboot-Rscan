@@ -1,17 +1,19 @@
 use tokio_stream::Stream;
 use std::fs::File;
 use std::io::{BufRead, BufReader};
+use std::time::Duration;
 use futures::stream::{self, StreamExt};
 use reqwest::{Client};
 use select::document::Document;
 use select::predicate::Name;
-use colored::Color::{BrightYellow};
+
 use colored::Colorize;
 use html5ever::tendril::fmt::Slice;
 use rand::prelude::IndexedRandom;
 use reqwest::header::{ACCEPT, ACCEPT_ENCODING, COOKIE, HeaderMap, HeaderName, HeaderValue, USER_AGENT};
 use rand::{Rng, thread_rng};
 use regex::Regex;
+use reqwest::redirect::Policy;
 
 // 定义一个Fuzz结构体来存储配置信息
 pub struct Fuzz {
@@ -123,7 +125,6 @@ impl Fuzz {
 
     }
     pub async fn fuzz(&self) {
-
         // 定义User-Agent头
         let user_agents = vec![
             "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.3",
@@ -163,18 +164,22 @@ impl Fuzz {
                 let client = if p.is_empty() {
                     Client::builder()
                         .danger_accept_invalid_certs(true) // 忽略 SSL 证书验证
-                        .build()
-                        .expect("Failed to create client")
+                        .timeout(Duration::from_secs(5))// 设置超时时间为5秒
+                        .redirect(Policy::none())// 禁用重定向
+                        .build()// 创建客户端
+                        .expect("Failed to create client")//抛出异常
                 } else {
                     let socks5_proxy = reqwest::Proxy::all(
                         p
                     ).expect("Failed to create proxy");
 
                     Client::builder()
-                        .proxy(socks5_proxy)
+                        .proxy(socks5_proxy)// 设置代理
+                        .timeout(Duration::from_secs(5))
+                        .redirect(Policy::none())// 禁用重定向
                         .danger_accept_invalid_certs(true) // 忽略 SSL 证书验证
-                        .build()
-                        .expect("Failed to create client")
+                        .build()// 创建客户端
+                        .expect("Failed to create client")//抛出异常
                 };
                 // 创建请求
                 let mut headers = HeaderMap::new();
@@ -214,21 +219,23 @@ impl Fuzz {
                         // 获取响应HTML
                         let html = response.text().await.unwrap();
                         // 获取响应标题和长度
-                        let title = Self::get_title(&html,status);
+                        let title = Self::get_title(&html, status);
                         let length = html.len();
                         // 构建结果字符串
-                        let color_result=format!("[{:?}] {} - Status: {:?} - Length: {}", title, url, status, length);
+                        let color_result = format!("[{:?}] {} - Status: {:?} - Length: {}", title, url, status, length);
                         // 将状态码转换为i32类型
-                        let int_status=status.as_u16() as i32;
+                        let int_status = status.as_u16() as i32;
+                        let _a = 1;
                         // 根据状态码使用不同颜色打印结果
-                        match int_status {
-                            200 => println!("{}",color_result.red()),
-                            301 => println!("{}",color_result.green()),
-                            _  => println!("{}",color_result.color(BrightYellow)),
+                        if length > 0 {
+                            match int_status {
+                                200 => println!("{}", color_result.red()),
+                                // 301 => println!("{}",color_result.green()),
+                                _ => println!("{}", "error".red()),
+
+                                //
+                            }
                         }
-
-
-
                     }
                     // 处理请求错误
                     Err(err) => {
