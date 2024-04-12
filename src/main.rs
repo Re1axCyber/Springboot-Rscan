@@ -49,6 +49,7 @@ _\ \ |_) | |  | | | | | (_| | |_) | (_) | (_) | ||_____/ _  \__ \ (_| (_| | | | 
         //遍历url文件中的url
         for url in urls {
             let fuzzer = fuzz::Fuzz::new(&url, &*args.dict,&*args.proxy,&*args.cookies,&*args.sem);//创建Fuzz对象
+            fuzzer.check().await;//调用fuzz方法
             fuzzer.fuzz().await;//调用fuzz方法
         }
 
