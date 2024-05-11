@@ -7,24 +7,23 @@ edition = "2021"
 [profile.release-lto]
 inherits="release"
 lto = true
-opt-level =1
+opt-level =3
 overflow-checks = true
 debug=false
 codegen-units=256
 
 [dependencies]
-reqwest = { version = "0.11.26", features = ["json","socks"] }
-tokio = { version = "1.36.0", features = ["full"] }
-async-std = "1.12.0"
-winapi = { version = "0.3.9", features = ["winuser", "libloaderapi","memoryapi","wincon","minwinbase","sysinfoapi","winnt"] }
+reqwest = { version = "0.12.1", features = ["json","socks"] }
+tokio = { version = "1.37.0", features = ["full"] }
 chrono = "0.4.37"
-tokio-stream = "0.1.15"
 futures = "0.3.30"
 html5ever = "0.27.0"
 select = "0.6.0"
 colored = "2.1.0"
+tokio-stream = "0.1.15"
 clap = { version = "4.5.4", features=["derive"] }
 rand = "0.9.0-alpha.1"
 md5 = "0.7.0"
-http = "0.2.12"
 regex = "1.10.4"
+serde = { version = "1.0.197", features = ["derive"] }
+serde_json = "1.0.115"
