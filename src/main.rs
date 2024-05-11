@@ -34,10 +34,10 @@ struct Args {
     #[clap(short='c', long="cookies", value_name = "cookies",default_value = "")]// 定义cookie
     cookies: String,
     /// The sem to use
-    #[clap(short='s', long="sem", value_name = "sem",default_value = "10")]// 定义cookie
+    #[clap(short='s', long="sem", value_name = "sem",default_value = "10")]// 定义信号量
     sem: String,
     /// The sem to use ，spring or dir
-    #[clap(short='m', long="method", value_name = "method",default_value = "spring")]// 定义cookie
+    #[clap(short='m', long="method", value_name = "method",default_value = "spring")]// 定义模式
     method: String,
 }
 
