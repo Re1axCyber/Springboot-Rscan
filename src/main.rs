@@ -1,6 +1,4 @@
 mod fuzz;
-mod hunter_serach;
-mod zoomeye_search;
 use clap::Parser;
 use colored::Colorize;
 use tokio;
@@ -48,7 +46,6 @@ async fn process_url(url: &str) {
     match args.method.as_str() {
         "spring" => {
             fuzzer.check().await;
-            fuzzer.fuzz().await;
         }
         "dir" => fuzzer.fuzz().await,
         _ => {
@@ -58,9 +55,11 @@ async fn process_url(url: &str) {
 }
 #[tokio::main]
 async fn main() {
+
     let args = Args::parse();//解析命令行参数
     let url_file = args.urlfile;//获取url文件路径
     let url = &args.url;//获取url
+
     let logo= r"
  __            _             _                 _          __
 / _\_ __  _ __(_)_ __   __ _| |__   ___   ___ | |_       /__\___  ___ __ _ _ __
@@ -71,6 +70,7 @@ _\ \ |_) | |  | | | | | (_| | |_) | (_) | (_) | ||_____/ _  \__ \ (_| (_| | | | 
                                                                      Author:Re1ax_Cyber.
  ".green();
     println!("{}",logo);
+    println!("{}", "Scanning Start".bright_green());
     if  url_file != ""{//如果url文件不为空
         //读取url文件
         let urls = fuzz::Fuzz::read_urls(&url_file);
@@ -79,13 +79,12 @@ _\ \ |_) | |  | | | | | (_| | |_) | (_) | (_) | ||_____/ _  \__ \ (_| (_| | | | 
             //process_url(&*url).await;
             tokio::join!(process_url(&*url));//并发执行
         }
-
-
     } else if url != "" {
         // 单独处理URL
         process_url(url).await;
     } else {
         eprintln!("{}", "请提供URL文件或单个URL".bright_yellow());
+        std::process::exit(1);
     }
-
+    println!("{}", "Scan Completed!".bright_green());
 }
