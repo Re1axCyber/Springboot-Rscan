@@ -58,7 +58,6 @@ async fn main() {
     let args = Args::parse();//解析命令行参数
     let url_file = args.urlfile;//获取url文件路径
     let url = &args.url;//获取url
-
     let logo= r"
  __            _             _                 _          __
 / _\_ __  _ __(_)_ __   __ _| |__   ___   ___ | |_       /__\___  ___ __ _ _ __
