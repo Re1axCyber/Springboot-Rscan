@@ -39,5 +39,7 @@ cargo run --release -- -d 字典路径 -f 需要扫描的URL文件路径 -s 需�
 -f 需要扫描的URL文件路径：需要扫描的URL文件路径，仅支持txt格式。
 
 -c 指定cookie
+
+-m 程序运行的模式 spring或者dirÍ
 ## 注意
 本工具禁止用于商业及违法犯罪用途，仅供学习交流使用。
